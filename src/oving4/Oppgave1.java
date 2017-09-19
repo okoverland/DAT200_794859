@@ -37,7 +37,7 @@ public class Oppgave1 {
  	
  */
 	
-	// oppgave d)
+	// oppgave d) 
 	
 	public static double iterativN (double n) {
 		

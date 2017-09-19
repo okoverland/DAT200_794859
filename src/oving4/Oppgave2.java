@@ -4,7 +4,7 @@ public class Oppgave2 {
 	
 	static String stack = "ABC";
 			
-	// Start metode
+	// Start metode 
 	public static void hanoiTower(int stackSize) {
 		if ( stackSize < 1 ) throw new IllegalArgumentException("Antall skiver må være flere enn 0.");
 		System.out.printf("Hanois Tårn løser for %d skiver:%n%n", stackSize);

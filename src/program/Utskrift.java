@@ -13,6 +13,7 @@ import student.Student;
 
 public class Utskrift {
 	
+	@SuppressWarnings("unchecked")
 	public static ArrayList<Student> lesInnStudenter() {
 		ArrayList<Student> lista = null;
 		Object o;

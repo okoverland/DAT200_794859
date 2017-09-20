@@ -1,34 +1,42 @@
 package oving4;
 
+import java.util.Scanner;
+
+import exceptions.IllegaInputException;
+
 public class Oppgave2 {
 	
-	static String stack = "ABC";
+	static int moves = 0;
 			
-	// Start metode 
-	public static void hanoiTower(int stackSize) {
-		if ( stackSize < 1 ) throw new IllegalArgumentException("Antall skiver må være flere enn 0.");
-		System.out.printf("Hanois Tårn løser for %d skiver:%n%n", stackSize);
-		hanoiTower(stackSize, 1, 3);
+	// helper method
+	static void hanoiTower(int disks) throws IllegaInputException {
+		if ( disks < 1 ) throw new IllegaInputException();
+		System.out.printf("Hanois Tårn løst for %d skiver:%n%n", disks);
+		hanoiTower(disks, 'A', 'C', 'B');
 	}
-	
-	// Rekursiv metode
-	
-	//metoden flytter nå fra A til C, må skrives om til å flytte til B
-	public static void hanoiTower(int stackSize, int startStack, int endStack) {
-		if ( stackSize == 0 ) return;
-		
-		int middleStack = 6 - endStack - startStack;
-		hanoiTower(stackSize - 1, startStack, middleStack);
-		
-		System.out.printf("Flytter %s fra %s til %s%n", stackSize, stack.charAt(startStack-1), stack.charAt(endStack-1) );
-		
-		hanoiTower(stackSize - 1, middleStack, endStack);
+	// recursive method
+	static void hanoiTower(int disks, char startPeg, char auxPeg, char endPeg) {
+		if ( disks == 0 ) return;
+		hanoiTower(disks - 1, startPeg, endPeg, auxPeg); 
+		System.out.printf("Steg %d: Flytter %s fra %s til %s%n", ++moves, disks, startPeg, endPeg );
+		hanoiTower(disks - 1, auxPeg, startPeg, endPeg);
 	}
 
 	public static void main(String[] args) {
 		
-		hanoiTower(3);
-
+		Scanner in = new Scanner(System.in);
+		try {
+			System.out.print("Skriv inn antall skiver: ");
+			int disks = in.nextInt();
+			System.out.println();
+						
+			hanoiTower(disks);
+			
+		} catch (Exception e) {
+			System.err.println("Antall skiver må være flere enn 0!");
+			e.printStackTrace();
+		} finally {
+			in.close();
+		}
 	}
-
 }

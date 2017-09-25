@@ -20,20 +20,20 @@ public class Oppgave1 {
  	Rekurensligning:
  	To tester O(1). Hvis n større enn 1, kaller algoritmen seg selv med n-1 og 1/n som parameter.
  	
- 	T(n) = T(n-1) + 1/n + 1, T(1) = 1
+ 	T(n) = T(n-1) + 1/n + 2, T(1) = 2
  	
  	Oppgave c)
- 	T(n-1) = T(n-2) + 1/n + 1
- 	>> T(n) = ( T(n-2) + 1/n + 1 ) + 1/n + 1 = T(n-2) + 2/n + 2
+ 	T(n-1) = T(n-2) + 1/n + 2
+ 	>> T(n) = ( T(n-2) + 1/n + 2 ) + 1/n + 2 = T(n-2) + 2/n + 4
  	
- 	T(n-2) = T(n-3) + 1/n + 1
- 	>> T(n) = ( T(n-3) + 1/n + 1 ) + 2/n + 2 = T(n-3) + 3/n + 3
+ 	T(n-2) = T(n-3) + 1/n + 2
+ 	>> T(n) = ( T(n-3) + 1/n + 2 ) + 2/n + 4 = T(n-3) + 3/n + 6
  	...
- 	T(n) = T(n-k) + k/n + k
+ 	T(n) = T(n-k) + k/n + 2k
  	>> setter k= n-1 for å finne T(1)
- 	T(n) = T(n-(n-1) + (n-1)/n + (n-1) = T(1) + (n-1)/n + n -1 = 1 + (n-1)/n + n - 1 = n^2 - n + n^2 = 2n^2 - n
+ 	T(n) = T(n-(n-1) + (n-1)/n + 2(n-1) = T(1) + (n-1)/n + 2n -2 = 2 + (n-1)/n + 2n - 2 = (n-1)/n + 2n = 1 - 1/n + 2n = 2n - 1/n + 1
  	 	
- 	Kjøretid: T(n) = 2n^2 - n >> O(n^2)
+ 	Kjøretid: T(n) = 2n - 1/n + 1 >> O(n)
  	 	
  */
 	
@@ -61,8 +61,7 @@ public class Oppgave1 {
 			System.out.printf("%1$-4s%2$10s%3$10s%n", "n", "Rekursiv", "Iterativ");
 		for (int e : n) { 
 			System.out.printf("%1$-4s%2$10.4f%3$10.4f%n", e, rekursivN(e), iterativN(e));
-		}
-				
+		}				
 	}
 
 }

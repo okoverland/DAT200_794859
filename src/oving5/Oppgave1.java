@@ -3,6 +3,8 @@ package oving5;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import program.Randomizer;
+
 public class Oppgave1 {
 
 	public static void main(String[] args) {

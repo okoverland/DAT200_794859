@@ -18,7 +18,7 @@ public class Oppgave2 {
 	/**
 	 * Method to solve Tower of Hanoi
 	 * 
-	 * @author Ole K. Øverland, 794859
+	 * @author 			Ole K. Øverland, 794859
 	 * @param discs 	Number of discs to solve
 	 * @param startPeg  Letter of first peg
 	 * @param auxPeg    Letter of auxiliary peg
@@ -61,6 +61,7 @@ public class Oppgave2 {
 	...
 	T(n) = 2^k * T(n-k) + 2^k - 1, setter k = (n-1) for å få T(1) = 1
 	T(n) = 2^(n-1) * 1 + 2^(n-1) - 1 = 2 * 2^(n-1) - 1 = 2 * ( 2^n / 2^1 ) - 1 = 2^n - 1
+	T(n) = 2^n - 1
 	
 	Oppgave c)
 	O(2^n)

@@ -18,7 +18,7 @@ public class Oppgave1 {
 /*
  	Oppgave b)
  	Rekurensligning:
- 	To tester O(1). Hvis n større enn 1, kalles algoritmen seg selv med n-1 og 1/n som parameter.
+ 	To tester O(1). Hvis n større enn 1, kaller algoritmen seg selv med n-1 og 1/n som parameter.
  	
  	T(n) = T(n-1) + 1/n + 1, T(1) = 1
  	
@@ -33,8 +33,8 @@ public class Oppgave1 {
  	>> setter k= n-1 for å finne T(1)
  	T(n) = T(n-(n-1) + (n-1)/n + (n-1) = T(1) + (n-1)/n + n -1 = 1 + (n-1)/n + n - 1 = n^2 - n + n^2 = 2n^2 - n
  	 	
- 	Kjøretid: T(n) = 2n^2 - n >> O(n) = n^2
- 	
+ 	Kjøretid: T(n) = 2n^2 - n >> O(n^2)
+ 	 	
  */
 	
 	// oppgave d) 

@@ -26,13 +26,10 @@ public class BufferedArrayList <T> implements List<T> {
 		this(3);
 	}
 	
-	private void growArrayFront() {
-		growArrayFront(theElements.length * 2);
-	}
 	// Kjøretid: O(n)
-	private void growArrayFront(int size) {
-		Object[] newArray = new Object[size];
-		int newIndex = size/2;
+	private void growArrayFront() {
+		Object[] newArray = new Object[theElements.length * 2];
+		int newIndex = (theElements.length * 2)/2;
 		for ( int i = index; i < theElements.length; i++) {
 			newArray[i + newIndex] = theElements[i];
 		}
@@ -44,12 +41,9 @@ public class BufferedArrayList <T> implements List<T> {
 		if ( index == 0 ) { growArrayFront(); }
 	}
 	
-	private void growArrayEnd() {
-		growArrayEnd( theElements.length * 2 );
-	}
 	// Kjøretid: O(n)
-	private void growArrayEnd(int size) {
-		Object[] newArray = new Object[size];
+	private void growArrayEnd() {
+		Object[] newArray = new Object[theElements.length * 2];
 		for ( int i = index; i < theElements.length; i++ ) {
 			newArray[i] = theElements[i];
 		}
@@ -69,10 +63,24 @@ public class BufferedArrayList <T> implements List<T> {
 		theElements[index + elements++] = e;
 		return true;
 	}
-	
+	// Kjøretid rettet: O(1) amortized
 	// kJøretid: O(n/2) = O(n), hvis array må økes, O(2n) = O(n)
 	@Override
 	public void add(int index, T e) {
+		if ( index > elements || index < 0 ) {
+			throw new IndexOutOfBoundsException();
+		}
+		
+		if (index == elements) {
+			add(e);
+			return;
+		}
+		
+		if (index == 0) {
+			addFirst(e);
+			return;
+		}
+		
 		int tempIndex = index + this.index;
 		
 		if ( index < elements/2 ) { // shift indexes towards front
@@ -103,6 +111,8 @@ public class BufferedArrayList <T> implements List<T> {
 	// Kjøretid O(n/2) = O(n)
 	@Override
 	public T remove(int index) {
+		
+		if (index > elements || index < 0) throw new ArrayIndexOutOfBoundsException();
 		
 		T e = get(index);
 		int tempIndex = index + this.index;

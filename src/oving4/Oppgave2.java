@@ -53,7 +53,8 @@ public class Oppgave2 {
 
 /* Oppgave b)
 	
-	Algortitmen kaller seg selv med (n-1) to ganger, dvs. T(n) = 2 * T(n-1) + 1, T(1) = 1
+	Algortitmen kaller seg selv med (n-1) to ganger med én sammenligning,
+	dvs. T(n) = 2 * T(n-1) + 1, T(1) = 1
 	
 	T(n-1) = 2 * T(n-2) + 1 gir T(n) = 2 * (2 * T(n-2) + 1) + 1 = 4 * T(n-2) + 3
 	T(n-2) = 2 * T(n-3) + 1 gir T(n) = 4 * (2 * T(n-3) + 1) + 3 = 8 * T(n-3) + 7

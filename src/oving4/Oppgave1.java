@@ -20,20 +20,21 @@ public class Oppgave1 {
  	Rekurensligning:
  	To tester O(1). Hvis n større enn 1, kaller algoritmen seg selv med n-1 og 1/n som parameter.
  	
- 	T(n) = T(n-1) + 1/n + 2, T(1) = 2
- 	
- 	Oppgave c)
- 	T(n-1) = T(n-2) + 1/n + 2
- 	>> T(n) = ( T(n-2) + 1/n + 2 ) + 1/n + 2 = T(n-2) + 2/n + 4
- 	
- 	T(n-2) = T(n-3) + 1/n + 2
- 	>> T(n) = ( T(n-3) + 1/n + 2 ) + 2/n + 4 = T(n-3) + 3/n + 6
- 	...
- 	T(n) = T(n-k) + k/n + 2k
- 	>> setter k= n-1 for å finne T(1)
- 	T(n) = T(n-(n-1) + (n-1)/n + 2(n-1) = T(1) + (n-1)/n + 2n -2 = 2 + (n-1)/n + 2n - 2 = (n-1)/n + 2n = 1 - 1/n + 2n = 2n - 1/n + 1
+ 	T(n) = T(n-1) + 1/n + 2, T(1) = 2  BEMERKNING: 1/n er ikke gyldig, da antall basis operasjoner ikke kan krympe!
+ 	RIKTIG FORMEL: T(n) = T(n-1) + O(1)
  	 	
- 	Kjøretid: T(n) = 2n - 1/n + 1 >> O(n)
+ 	Oppgave c)
+ 	T(n-1) = T(n-2) + 1
+ 	>> T(n) = ( T(n-2) + 1) + 1= T(n-2) + 2
+ 	
+ 	T(n-2) = T(n-3) + 1
+ 	>> T(n) = ( T(n-3) + 1) + 2 = T(n-3) + 3
+ 	...
+ 	T(n) = T(n-k) + k
+ 	>> setter k= n-1 for å finne T(1)
+ 	T(n) = T(n-(n-1) + (n-1) = T(1) + (n-1) = 1 + n - 1 = n
+ 	 	
+ 	Kjøretid: T(n) = T(1) + n >> O(n)
  	 	
  */
 	

@@ -1,51 +1,48 @@
-package oving2;
+package oving6;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 import program.Utskrift;
 import student.Student;
 
-public class Oppgave1 {
-	
-	public static List<Student> firstNameList(List<Student> students, String nameSearch) {
-		
-		return students
-				.stream()
-				.filter(s -> s.getFornavn().toLowerCase().equals(nameSearch.toLowerCase()))
-				.collect(Collectors.toList());
-	}
+public class Oppgave2c {
 
 	public static void main(String[] args) {
 		
 		List<Student> studentene = Utskrift.lesInnStudenter();
+		if ( studentene == null ) return;
 		
-		for (Student s: studentene) {
-			System.out.println(s);
-		}
 		
-		@SuppressWarnings("resource")
+		AVLTre<Integer, Student> listen = new AVLTre<>();
+		
+		studentene
+			.stream()
+			.forEach( student -> listen.put(student.getStudentnummer(), student) );
+		
+		listen.skrivUtTre();
+		
+		
 		Scanner in = new Scanner(System.in);
 		
 		String nameSearch; //hent ut dette navnet
 		
 		System.out.println();
-		System.out.printf("Hent ut fornavn: ");
+		System.out.printf("Hent ut etternavn: ");
 		
 		nameSearch = in.nextLine();
 		
 		System.out.println();
 		
-		studentene = firstNameList(studentene, nameSearch);
 		
-		if (studentene.isEmpty()) {
+		if (listen.isEmpty()) {
 			System.out.printf("\n\n--- Fant ikke \"%s\" i listen ---", nameSearch);
 		} else {
 			for (Student s: studentene) {
 				System.out.println(s);
 			}
 		}
-		
+		*/
+
 	}
 
 }

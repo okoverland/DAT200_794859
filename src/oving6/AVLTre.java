@@ -1,13 +1,15 @@
 package oving6;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.Stack;
-
 import emner.Emne;
 import util.Pair;
 
@@ -33,6 +35,10 @@ public class AVLTre <K extends Comparable<? super K>, V> implements SortedMap<K,
 			venstrebarn = null;
 			hoyrebarn = null;
 			forelder = null;
+		}
+		public boolean bladNode() {
+			if (venstrebarn == null && hoyrebarn == null) return true;
+			return false;
 		}
 	}
 	
@@ -61,9 +67,12 @@ public class AVLTre <K extends Comparable<? super K>, V> implements SortedMap<K,
 	@Override
 	public boolean containsValue(Object value) {
 		if (isEmpty()) throw new NullPointerException("Treet er tomt!");
-		
-		return false;
+				
+		return values().stream().anyMatch(v -> v.equals(value));
+
 	}
+	
+
 	
 	/*
 	 * Kjøretid O(log(n))
@@ -398,16 +407,39 @@ public class AVLTre <K extends Comparable<? super K>, V> implements SortedMap<K,
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public Collection<V> values() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		class ValuesAsCollection {
+			
+			private Collection<V> listen;
+			
+			public ValuesAsCollection() {
+				listen = new ArrayList<>();
+				addValues(rot);
+			}
+			
+			public void addValues(Binaertrenode noden) {
+				listen.add(noden.verdi);
+				if (noden.venstrebarn != null) addValues(noden.venstrebarn);
+				if (noden.hoyrebarn != null) addValues(noden.hoyrebarn);
+			}
+			
+			public Collection<V> getCollection() {
+				return listen;
+			}
+		}
+		
+		ValuesAsCollection coll = new ValuesAsCollection();
+		
+		return coll.getCollection();
 	}
-	
+		
 	/*
 	 * Metode for å skrive ut et tre. Brukes for å teste trestrukturen.
 	 */
+	
 	public void skrivUtTre() {
 		skrivUtTre(rot);
 	}
@@ -426,11 +458,67 @@ public class AVLTre <K extends Comparable<? super K>, V> implements SortedMap<K,
 		skrivUtTre(noden.hoyrebarn);
 	}
 
+	
+	// Oppgave 2 d) Pre-order iterator. Bruker koden fra iterator() og bytter ut stack med en queue.
+	
+	public Iterator<Pair<K,V>> preOrderIterator() {
+		return new PreOrderTreeIterator();
+	}
+	
+	private class PreOrderTreeIterator implements Iterator<Pair<K,V>> {
+		
+		private class QElement {
+			Binaertrenode noden;
+			int teller;
+			
+			public QElement(Binaertrenode noden, int teller) {
+				this.noden = noden;
+				this.teller = teller;
+			}
+		}
+		
+		private Queue<QElement> koen;
+		
+		public PreOrderTreeIterator() {
+			koen = new LinkedList<>();
+			koen.add(new QElement(rot, 0));
+		}
+		
+		@Override
+		public boolean hasNext() {
+			if (koen.isEmpty()) return false;
+			return true;
+		}
+
+		@Override
+		public Pair<K, V> next() {
+			while (!koen.isEmpty()) {
+				QElement elementet = koen.remove();
+				if (elementet.teller == 0) {
+					elementet.teller++;
+					koen.add(elementet);
+					if (elementet.noden.venstrebarn != null) {
+						koen.add(new QElement(elementet.noden.venstrebarn, 0));
+					}
+					continue;
+				}
+				if (elementet.teller == 1) {
+					elementet.teller++;
+					if (!(elementet.noden.hoyrebarn == null)) koen.add(new QElement(elementet.noden.hoyrebarn, 0));
+					return new Pair<>(elementet.noden.nokkel, elementet.noden.verdi);					
+				}
+			}
+			return null;
+		}
+		
+	}
+	
 	/*
 	 * Iterator laget for testing. Returnerer et egendefinert Pair objekt heller enn
 	 * den indre klassen i Map som returneres av entrySet metoden. Dette er en
 	 * InOrder iterator.
 	 */
+	
 	public Iterator<Pair<K, V>> iterator() {
 		return new TreeIterator();
 	}
@@ -492,10 +580,20 @@ public class AVLTre <K extends Comparable<? super K>, V> implements SortedMap<K,
 		emneliste.put("ELE210", new Emne("ELE210", "Datamaskinarkitektur", 'H'));
 		emneliste.put("DAT200", new Emne("DAT200", "Algoritmer", 'H'));
 		System.out.println();
+		emneliste.skrivUtTre();
+		System.out.println();
+		System.out.println("In-order iterator:");
 		Iterator<Pair<String, Emne>> iter = emneliste.iterator();
 		while (iter.hasNext()) {
 			System.out.println(iter.next());
 		}
+		System.out.println();
+		System.out.println("Pre-order iterator (oppgave 2d):");
+		Iterator<Pair<String, Emne>> iterPre = emneliste.preOrderIterator();
+		while (iterPre.hasNext()) {
+			System.out.println(iterPre.next());
+		}
+		System.out.println();
 		System.out.println(emneliste.get("ELE210"));
 		System.out.println(emneliste.get("ELE230"));
 		System.out.println();

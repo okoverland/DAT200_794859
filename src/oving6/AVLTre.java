@@ -570,6 +570,7 @@ public class AVLTre <K extends Comparable<? super K>, V> implements SortedMap<K,
 		}
 		
 	}
+	
 
 	public static void main(String[] args) {
 		Emne testemne = new Emne("DAT100", "Objektorientert programmering", 'V');

@@ -1,5 +1,6 @@
 package program;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -11,7 +12,7 @@ public class IOTest {
 
 	public static void main(String[] args) throws IOException {
 		
-		Path path = Paths.get("C:\\Users\\ole.PROBYLOKAL\\Downloads\\A3_PLAN_A1.pdf");
+		Path path = Paths.get("C:\\Users\\ole.PROBYLOKAL\\Downloads\\A3_PLAN_A1.pdf");  // windows only
 		
 		if (Files.exists(path)) {
 			System.out.printf("%-15s %s%n", "Filen:", path);
@@ -26,7 +27,7 @@ public class IOTest {
 			System.out.println("Other contents of directory:");
 			DirectoryStream<Path> dirStream = Files.newDirectoryStream(path.getParent());
 			dirStream.forEach(e -> System.out.println(e.getFileName()));
-			
+			System.out.println(File.separator);
 		}
 
 	}

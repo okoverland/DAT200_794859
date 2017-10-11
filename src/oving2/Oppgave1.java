@@ -18,7 +18,7 @@ public class Oppgave1 {
 
 	public static void main(String[] args) {
 		
-		List<Student> studentene = Utskrift.lesInnStudenter();
+		List<Student> studentene = Utskrift.lesInnStudenter("studentliste_oving_9.ser");
 		
 		for (Student s: studentene) {
 			System.out.println(s);

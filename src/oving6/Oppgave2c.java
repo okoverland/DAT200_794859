@@ -9,7 +9,7 @@ public class Oppgave2c {
 	
 	public static void main(String[] args) {
 		
-		List<Student> studentene = Utskrift.lesInnStudenter();
+		List<Student> studentene = Utskrift.lesInnStudenter("studentliste_oving_9.ser");
 		if ( studentene == null ) return;
 				
 		AVLTre<Integer, Student> listen = new AVLTre<>();

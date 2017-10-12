@@ -14,9 +14,9 @@ public class Oppgave2c {
 				
 		AVLTre<Integer, Student> listen = new AVLTre<>();
 		
-		studentene
-			.stream()
-			.forEach( student -> listen.put(student.getStudentnummer(), student) );
+		for (Student student : studentene) {
+			listen.put(student.getStudentnummer(), student);
+		}
 		
 		System.out.println("AVL-Treet:");
 		listen.skrivUtTre();

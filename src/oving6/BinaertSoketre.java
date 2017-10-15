@@ -310,7 +310,9 @@ public class BinaertSoketre <K extends Comparable<? super K>, V> implements Sort
 		System.out.println();
 		skrivUtTre(noden.venstrebarn);
 		skrivUtTre(noden.hoyrebarn);
-	}
+	} 
+	
+	//Oppgave 2a
 	private int leaves;
 	
 	public int getAntallBladnoder() {
@@ -327,7 +329,7 @@ public class BinaertSoketre <K extends Comparable<? super K>, V> implements Sort
 		return;
 		
 	}
-	
+	//Oppgave 2b
 	public void skrivUtNivaa(int n) {
 		if (rot == null) throw new NullPointerException("Søketreet er tomt!");
 		if (n < 0) throw new IllegalArgumentException("Det finnes ikke nivå lavere enn 0!");

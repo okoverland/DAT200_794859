@@ -6,35 +6,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/*
- * Eksempel HashMap implementasjon, uferdig.
- * 
- * Legg merke til at denne i motsetning til AVLTre implementerer
- * Map og ikke SortedMap samt at den ikke stiller noen
- * betingelse om sammenliknbarhet på nøkkelen.
- */
 public class MittHashMap <K, V> implements Map<K, List<V>> {
+	
 	public static final double FYLLINGSGRAD = 0.7;
 	
-	// Representerer et nøkkel - verdi par. Sammenliknes
-	// på nøkkelen.
 	private class Innslag {
 		K nokkel;
 		List<V> verdier;
 		
-		public Innslag(K key) {
-			verdier = new ArrayList<>(2);
-			nokkel = key;
-		}
-		
 		public Innslag(K key, V value) {
-			this(key);
+			nokkel = key;
+			verdier = new ArrayList<>();
 			verdier.add(value);
 		}
 		
 		public Innslag(K key, List<V> values) {
-			this(key);
-			for (V value : values) verdier.add(value);
+			nokkel = key;
+			verdier = new ArrayList<>();
+			verdier.addAll(values);
 		}
 		
 		@Override public int hashCode() {
@@ -47,15 +36,23 @@ public class MittHashMap <K, V> implements Map<K, List<V>> {
 		public void addValue(V value) {
 			verdier.add(value);
 		}
+		
+		public void addValues(List<V> values) {
+			verdier.addAll(values);
+		}
+		
+		public void removeValue(V value) {
+			if (verdier.contains(value)) {
+				verdier.remove(value);
+			}
+		}
+		
 	}
 	
 	private Object[] elementene;	// Array som inneholder elementene
 	private int antallElementer;	// Antall elementer i lista nå
 	
-	/*
-	 * På samme måte som en ArrayList trenger også et HashMap
-	 * en startkapasitet
-	 */
+	
 	public MittHashMap(int startkapasitet) {
 		elementene = new Object[startkapasitet];
 		antallElementer = 0;
@@ -64,10 +61,7 @@ public class MittHashMap <K, V> implements Map<K, List<V>> {
 		}
 	}
 
-	/*
-	 * Kjøretid O(tabellstørrelse) siden den setter alle 
-	 * referansene til null
-	 */
+	
 	@Override
 	public void clear() {
 		antallElementer = 0;
@@ -94,16 +88,14 @@ public class MittHashMap <K, V> implements Map<K, List<V>> {
 		return null;
 	}
 
-	/*
-	 * Kjøretid O(1) best og average case, O(n) worst case på grunn av kvadratiskProving
-	 */
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<V> get(Object key) {
 		K nokkel = (K)key;
-		int verdi = beregnPosisjon(nokkel);
-		if (elementene[verdi] != null) {
-			Innslag tempInnslag = (MittHashMap<K, V>.Innslag) elementene[verdi]; 
+		int posisjon = beregnPosisjon(nokkel);
+		if (elementene[posisjon] != null) {
+			Innslag tempInnslag = (Innslag) elementene[posisjon]; 
 			return tempInnslag.verdier;
 		}
 		return null;
@@ -132,8 +124,17 @@ public class MittHashMap <K, V> implements Map<K, List<V>> {
 			elementene[posisjon] = new Innslag(key, value);
 			antallElementer++;
 		} else {
-			Innslag tempInnslag = (MittHashMap<K, V>.Innslag) elementene[posisjon];
-			tempInnslag.addValue(value);
+			Innslag tempInnslag = (Innslag) elementene[posisjon];
+			
+			if (tempInnslag.nokkel.equals(key)) {
+				tempInnslag.addValue(value);
+			} else {
+				int nyPos = kvadratiskProving(key);
+				/// IKKE FERDIG!!!
+				
+			}
+			
+			
 		}
 		return null;
 	}
@@ -150,10 +151,8 @@ public class MittHashMap <K, V> implements Map<K, List<V>> {
 			elementene[posisjon] = new Innslag(key, values);
 			antallElementer++;
 		} else {
-			Innslag tempInnslag = (MittHashMap<K, V>.Innslag) elementene[posisjon];
-			for (V value : values) {
-				tempInnslag.addValue(value);
-			}
+			Innslag tempInnslag = (Innslag) elementene[posisjon];
+			tempInnslag.addValues(values);
 		}
 		return null;
 	}
@@ -184,23 +183,22 @@ public class MittHashMap <K, V> implements Map<K, List<V>> {
 	
 	private int beregnPosisjon(K nokkel) {
 		
-		return Math.abs(nokkel.hashCode()) % elementene.length;
+		return Math.abs(nokkel.hashCode() % elementene.length);
 	}
 	
 	/*
 	 * Kjøretid typisk O(1), worst case O(n)
 	 */
 	private int kvadratiskProving(K nokkel) {
-		int forsoksplass = (beregnPosisjon(nokkel)) % elementene.length;
+		int forsoksplass = beregnPosisjon(nokkel);
 		int i = 0;
-		Innslag innslaget = (Innslag)elementene[forsoksplass];
+		Innslag innslaget = (Innslag) elementene[forsoksplass];
 		while (elementene[forsoksplass] != null && !innslaget.nokkel.equals(nokkel)) {
 			i++;
 			// Fra beviset: For tabellengde som er et primtall så er de første
 			// tabellengde/2 plassene unike.
 			if (i > elementene.length/2) throw new RuntimeException("For full!");
 			forsoksplass += 2*i-1;
-			forsoksplass %= elementene.length;
 			innslaget = (Innslag)elementene[forsoksplass];
 		}
 		return forsoksplass;
@@ -217,6 +215,7 @@ public class MittHashMap <K, V> implements Map<K, List<V>> {
 	 */
 	@SuppressWarnings("unchecked")
 	private void utvidLista() {
+		System.out.println("Utvider listen...");
 		// Lagrer referanse til gammel liste
 		Object[] gammelListe = elementene;
 		

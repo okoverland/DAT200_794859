@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -52,8 +53,8 @@ public class Oppgave3OrdbankImporter {
 								.filter(word -> !word.contains("-"))
 								.filter(word -> !word.contains("'"))
 								.filter(word -> !word.contains("."))
-								//.limit(20000)
-								.collect(Collectors.toList() );
+								.limit(20)
+								.collect(Collectors.toCollection(ArrayList::new) );
 		     
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -78,6 +79,8 @@ public class Oppgave3OrdbankImporter {
 	public static void main(String[] args) {
 		
 		MittHashMap<String, String> listen = importTextFile();
+		
+		listen.printTable();
 		
 		String input = null;
 		List<String> getList = null;

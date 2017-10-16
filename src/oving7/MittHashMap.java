@@ -1,16 +1,20 @@
 package oving7;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class MittHashMap <K, V> implements Map<K, List<V>> {
+public class MittHashMap <K, V> implements Map<K, List<V>>, Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	public static final double FYLLINGSGRAD = 0.7;
 	
-	private class Innslag {
+	private class Innslag implements Serializable{
+		
+		private static final long serialVersionUID = 1L;
 		K nokkel;
 		List<V> verdier;
 		
@@ -119,24 +123,27 @@ public class MittHashMap <K, V> implements Map<K, List<V>> {
 			utvidLista();
 		}
 		int posisjon = beregnPosisjon(key);
+		Innslag tempInnslag = null;
 		
 		if (elementene[posisjon] == null) {
 			elementene[posisjon] = new Innslag(key, value);
 			antallElementer++;
 		} else {
-			Innslag tempInnslag = (Innslag) elementene[posisjon];
+			tempInnslag = (Innslag) elementene[posisjon];
 			
 			if (tempInnslag.nokkel.equals(key)) {
 				tempInnslag.addValue(value);
+				return tempInnslag.verdier.get(tempInnslag.verdier.size()-1);
 			} else {
-				int nyPos = kvadratiskProving(key);
-				if (elementene[nyPos] == null) {
-					elementene[nyPos] = new Innslag(key, value);
+				posisjon = kvadratiskProving(key);
+				if (elementene[posisjon] == null) {
+					elementene[posisjon] = new Innslag(key, value);
+					antallElementer++;
 				} else {
-					tempInnslag = (Innslag) elementene[nyPos];
+					tempInnslag = (Innslag) elementene[posisjon];
 					tempInnslag.addValue(value);
+					return tempInnslag.verdier.get(tempInnslag.verdier.size()-1);
 				}
-				
 			}
 		}
 		return null;

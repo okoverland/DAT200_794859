@@ -130,11 +130,14 @@ public class MittHashMap <K, V> implements Map<K, List<V>> {
 				tempInnslag.addValue(value);
 			} else {
 				int nyPos = kvadratiskProving(key);
-				/// IKKE FERDIG!!!
+				if (elementene[nyPos] == null) {
+					elementene[nyPos] = new Innslag(key, value);
+				} else {
+					tempInnslag = (Innslag) elementene[nyPos];
+					tempInnslag.addValue(value);
+				}
 				
 			}
-			
-			
 		}
 		return null;
 	}
@@ -199,6 +202,7 @@ public class MittHashMap <K, V> implements Map<K, List<V>> {
 			// tabellengde/2 plassene unike.
 			if (i > elementene.length/2) throw new RuntimeException("For full!");
 			forsoksplass += 2*i-1;
+			forsoksplass %= elementene.length;
 			innslaget = (Innslag)elementene[forsoksplass];
 		}
 		return forsoksplass;

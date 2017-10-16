@@ -53,7 +53,7 @@ public class Oppgave3OrdbankImporter {
 								.filter(word -> !word.contains("-"))
 								.filter(word -> !word.contains("'"))
 								.filter(word -> !word.contains("."))
-								.limit(20)
+								//.limit(20)
 								.collect(Collectors.toCollection(ArrayList::new) );
 		     
 		} catch (FileNotFoundException e) {
@@ -80,7 +80,7 @@ public class Oppgave3OrdbankImporter {
 		
 		MittHashMap<String, String> listen = importTextFile();
 		
-		listen.printTable();
+		//listen.printTable();
 		
 		String input = null;
 		List<String> getList = null;
@@ -96,7 +96,7 @@ public class Oppgave3OrdbankImporter {
 			if (input.equals("zzz")) break;
 			
 			getList = listen.get(input);
-			if (getList != null) {
+			if (getList != null) {/// FEIL HER!
 				
 				if (getList.size() < 2) {
 					System.out.printf("Det finnes ingen anagrammer for \"%s\"!%n%n", input);

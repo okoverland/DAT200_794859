@@ -1,8 +1,15 @@
 package oving7;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,7 +24,6 @@ public class Oppgave3OrdbankImporter {
 	
 	public static String sortString(String value) {
 		
-		// har ikke kontrollert verdi til æ ø å ok, men problemer med w
 		char[] valueAsChars = value.toCharArray();
 		Arrays.sort(valueAsChars);
 		return String.valueOf(valueAsChars);
@@ -32,9 +38,12 @@ public class Oppgave3OrdbankImporter {
 	 * 
 	 */
 	
-	public static MittHashMap<String,String> importTextFile() {
+	public static void importTextFile() {
 
 		String basePath = new File("").getAbsolutePath();
+		
+		Path outputPath = Paths.get(basePath + File.separator + "src" 
+				+ File.separator + "serialized" + File.separator + "dictionary.txt");
 		
 		Path inputPath = Paths.get(basePath + File.separator + "src" 
 				+ File.separator + "serialized" + File.separator + "fullform_bm.txt");
@@ -53,6 +62,7 @@ public class Oppgave3OrdbankImporter {
 								.filter(word -> !word.contains("."))
 								//.limit(20)
 								.collect(Collectors.toCollection(ArrayList::new) );
+			
 		     
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -62,21 +72,64 @@ public class Oppgave3OrdbankImporter {
 			e.printStackTrace();
 		}
 		
-		if (dictionary == null) return null;
-		else {
-			MittHashMap<String, String> hashMap = new MittHashMap<>(dictionary.size()*2);
+		if (dictionary != null) {
 			
-			for (String word : dictionary) {
-				hashMap.putSingle(sortString(word), word);
-			}
-			return hashMap;
+			try (FileOutputStream fos = new FileOutputStream(new File(outputPath.toString())) ) {
+				BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+
+				for (String s : dictionary) {
+						bw.write(s);
+						bw.newLine();
+				}
+				
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			
+		} else {
+			System.out.println("There was a problem importing dictionary.");
 		}
 		
 	}
 	
+	public static MittHashMap<String,String> getDictionary() {
+		String basePath = new File("").getAbsolutePath();
+		
+		Path inputPath = Paths.get(basePath + File.separator + "src" 
+				+ File.separator + "serialized" + File.separator + "dictionary.txt");
+		
+		if (Files.exists(inputPath)) {
+			try (FileInputStream fis = new FileInputStream(inputPath.toFile()) ) {				
+				BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+				
+				MittHashMap<String,String> theMap = new MittHashMap<>(1000000);
+				String line = null;
+				
+				while ( (line = br.readLine()) != null ) {
+					theMap.putSingle(sortString(line), line);
+				}
+				return theMap;
+				
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} 
+		return null;
+	}
+	
 	public static void main(String[] args) {
 		
-		MittHashMap<String, String> listen = importTextFile();
+		//importTextFile(); Kjøres kun ved ny liste
+		
+		MittHashMap<String, String> listen = getDictionary();
 
 		if (listen != null) {
 			
@@ -85,7 +138,7 @@ public class Oppgave3OrdbankImporter {
 			
 			try (Scanner in = new Scanner(System.in)) {
 				
-				System.out.printf("Finn anagram basert på norsk ordbank bokmåls ordliste. Skriv zzz for å avslutte.%n%n");
+				System.out.printf("Finn anagram basert på norsk ordbank bokmåls ordliste. Avslutt med tomt linjeskift.%n%n");
 				do {
 				getList = null;
 				System.out.printf("%s ", "Finn anagram for ord:");
@@ -93,7 +146,7 @@ public class Oppgave3OrdbankImporter {
 				input.trim();
 				input = input.toLowerCase();
 				
-				if (input.equals("zzz")) break;
+				if (input.equals("")) break;
 				
 				getList = listen.get(sortString(input));
 				
@@ -116,6 +169,8 @@ public class Oppgave3OrdbankImporter {
 				} while(true);
 				
 			}
+		} else {
+			System.out.println("Det oppstod et problem med å laste ordliste.");
 		}
 	}
 }

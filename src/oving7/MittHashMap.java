@@ -98,9 +98,20 @@ public class MittHashMap <K, V> implements Map<K, List<V>>, Serializable {
 	public List<V> get(Object key) {
 		K nokkel = (K)key;
 		int posisjon = beregnPosisjon(nokkel);
+		//System.out.println("Nøkkel: "+ nokkel + " | Posisjon: " + posisjon); //Debug
 		if (elementene[posisjon] != null) {
-			Innslag tempInnslag = (Innslag) elementene[posisjon]; 
-			return tempInnslag.verdier;
+			Innslag tempInnslag = (Innslag) elementene[posisjon];
+			if (tempInnslag.nokkel.equals(nokkel)) {
+				return tempInnslag.verdier;
+			} else {
+				posisjon = kvadratiskLeting(nokkel);
+				//System.out.println("kvadratiskLeting Posisjon: " + posisjon); //Debug
+				if (posisjon != -1) {
+					tempInnslag = (Innslag) elementene[posisjon];
+					//System.out.println("Nøkkel: "+ nokkel + " | Posisjon: " + posisjon); //Debug
+					return tempInnslag.verdier;
+				} else return null;
+			}			
 		}
 		return null;
 	}
@@ -215,6 +226,23 @@ public class MittHashMap <K, V> implements Map<K, List<V>>, Serializable {
 		return forsoksplass;
 	}
 	
+	private int kvadratiskLeting(K nokkel) {
+		int forsoksplass = beregnPosisjon(nokkel);
+		int i = 0;
+		Innslag innslaget = (Innslag) elementene[forsoksplass];
+		while (elementene[forsoksplass] != null && !innslaget.nokkel.equals(nokkel)) {
+			i++;
+			if (i > elementene.length/2) return -1;
+			forsoksplass += 2*i-1;
+			forsoksplass %= elementene.length;
+			innslaget = (Innslag)elementene[forsoksplass];
+		}
+		if (elementene[forsoksplass] != null) {
+			return forsoksplass;
+		}
+		return -1;
+	}
+	
 	/*
 	 * Utvider tabellen til størrelse lik det første primtallet høyere enn
 	 * det dobbelte av gammel størrelse
@@ -242,7 +270,7 @@ public class MittHashMap <K, V> implements Map<K, List<V>>, Serializable {
 		
 		for (Object o : gammelListe) {
 			if (o != null) {
-				tempInnslag = (MittHashMap<K, V>.Innslag) o;
+				tempInnslag = (Innslag) o;
 				put(tempInnslag.nokkel,tempInnslag.verdier);
 			}
 		}

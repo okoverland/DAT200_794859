@@ -24,7 +24,7 @@ public class Oppgave3OrdbankImporter {
 		
 		return value.chars()
 					.sorted()
-					.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+					.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append) // supplier, accumulator, combiner
 					.toString();
 		
 	}

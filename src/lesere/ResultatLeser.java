@@ -5,9 +5,10 @@ import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
-
 import emner.Eksamensresultat;
 import emner.Emne;
 import personer.Student;
@@ -17,41 +18,116 @@ public class ResultatLeser {
 	private List<Student> studentene;
 	private List<Emne> emnene;
 	private List<Eksamensresultat> resultatene;
-	private HashMap
+	private Map<Integer, Student> studentMapByID;
+	private Map<Integer, Student> studentMapByFullName;
+	private Map<Integer, Emne> emneMap;
 	
 	public ResultatLeser() {
 		studentene = new StudentLeser().lesStudenterFraFil();
 		emnene = new EmneLeser().lesEmnerFraFil();
-		resultatene = new ArrayList<>();
+		resultatene = lesResultaterFraFil();
+		studentMapByID = null;
+		studentMapByFullName = null;
+		emneMap = null;
+
 	}
 	
 	/*
-	 * O(n) kjøretid placeholder. Implementer en mer effektiv versjon her!
+	 * Oppgave 2 b) O(1), Minne O(n), men laster ikke før brukt
 	 */
 	private Student finnStudent(int id) {
-		for (Student studenten: studentene) {
-			if (studenten.getID() == id) return studenten;
-		}
-		return null;
+		
+		if (studentMapByID == null) studentMapByID = mapStudentsByID();		
+		return studentMapByID.get(id);
+		
 	}
 
 	/*
-	 * O(n) kjøretid placeholder. Implementer en mer effektiv versjon her!
+	 *Oppgave 2 b) O(1), Minne O(n), men laster ikke før brukt
 	 */
 	private Emne finnEmne(String emnekode) {
-		for (Emne emnet: emnene) {
-			if (emnet.getEmnekode().equals(emnekode)) return emnet;
-		}
-		return null;
+		
+		if (emneMap == null) emneMap = mapEmner();
+		return emneMap.get(emnekode.hashCode());
+		
+	}
+	
+	private Student finnStudentNavn(String navn) {
+		
+		if (studentMapByID == null) studentMapByFullName = mapStudentsByName();		
+		return studentMapByFullName.get(navn.hashCode());
+		
+	}
+	
+	private HashMap<Integer, Student> mapStudentsByID() {
+		return studentene.stream().collect(HashMap::new, (map,student) -> map.put(student.getID(), student), HashMap::putAll);
+	}
+	
+	private HashMap<Integer, Emne> mapEmner() {
+		return emnene.stream().collect(HashMap::new, (map, emne) -> map.put(emne.getEmnekode().hashCode(), emne), HashMap::putAll);
+	}
+	
+	private HashMap<Integer, Student> mapStudentsByName() {
+		return studentene.stream().collect(HashMap::new, (map,student) -> map.put(student.getNavnestreng().hashCode(), student), HashMap::putAll);
+	}
+	
+	private void getStudentInfo(Student student) {
+		
+		System.out.printf("%-50s %s%n", "Emne", "Karakter");
+		resultatene.stream()
+					.filter(r -> r.getStudenten().equals(student))
+					.forEach(r -> System.out.printf("%-50s %4c%n", r.getEmnet().toString(), r.getKarakter()));
+	}
+	
+	private void getEmneInfo(Emne emnet) {
+		
+		System.out.printf("%-50s %s%n", "Student", "Karakter");
+		resultatene.stream()
+					.filter(r -> r.getEmnet().equals(emnet))
+					.forEach(r -> System.out.printf("%-50s %4c%n", r.getStudenten().getNavnestreng(), r.getKarakter()));
 	}
 	
 	public void skrivUtStudenterSortertPaaNavn() {
+		
 		studentene.stream()
 					.sorted( (s1, s2) -> s1.getNavnestreng().compareTo(s2.getNavnestreng()))
-					.forEach(System.out::println);
+					.forEach( s -> System.out.println(s.getNavnestreng()) );
 	}
 	
+	public void getEmne(String emnekode) {
+		
+		Emne emnet = finnEmne(emnekode);
+		
+		if (emnet != null) {
+			System.out.println(emnet.toString());
+			getEmneInfo(emnet);
+			return;
+		}
+		
+		System.out.printf("Fant ikke emnet \"%s\"!%n", emnekode);		
+	}
 	
+	public void getStudent(String student) {
+		
+		Student studenten = finnStudentNavn(student);
+		if (studenten != null) {
+			System.out.println(studenten.toString());
+			getStudentInfo(studenten);
+			return;
+		}
+		
+		System.out.printf("Fant ikke studenten \"%s\"!%n", student);
+		
+	}
+	
+	public void printInputMenu() {
+		System.out.printf("%n%s%n%s%n%s%n%s", 
+				"1 - Skriv ut alle studenter",
+				"2 - Skriv ut info om student",
+				"3 - Finn emne",
+				"Velg menyelement (tomt for å avslutte): "
+		);
+	}
 	
 	private Eksamensresultat lesResultat(String innStreng) {
 		String[] komponenter = innStreng.split("\t");
@@ -62,7 +138,7 @@ public class ResultatLeser {
 		return resultatet;
 	}
 	
-	public List<Eksamensresultat> lesResultaterFraFil() {
+	private List<Eksamensresultat> lesResultaterFraFil() {
 				
 		try (Scanner filleser = new Scanner(new File(getFilePath()))){
 			List<Eksamensresultat> resultat = new ArrayList<>();
@@ -76,7 +152,6 @@ public class ResultatLeser {
 			return resultat;
 			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

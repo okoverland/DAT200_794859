@@ -59,6 +59,12 @@ public class ResultatLeser {
 		
 	}
 	
+	public void preloadHashMaps() {
+		if (studentMapByID == null) studentMapByID = mapStudentsByID();
+		if (emneMap == null) emneMap = mapEmner();
+		if (studentMapByID == null) studentMapByFullName = mapStudentsByName();
+	}
+	
 	private HashMap<Integer, Student> mapStudentsByID() {
 		return studentene.stream().collect(HashMap::new, (map,student) -> map.put(student.getID(), student), HashMap::putAll);
 	}

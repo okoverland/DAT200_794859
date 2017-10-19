@@ -461,6 +461,8 @@ public class AVLTre <K extends Comparable<? super K>, V> implements SortedMap<K,
 	
 	// Oppgave 2 d) Pre-order iterator. Bruker koden fra iterator() og bytter ut stack med en queue.
 	
+	// OBS! Løsningsforslaget løser denne på en enklere måte uten indre klasse.
+	
 	public Iterator<Pair<K,V>> preOrderIterator() {
 		return new PreOrderTreeIterator();
 	}

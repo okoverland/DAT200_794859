@@ -79,18 +79,39 @@ public class ResultatLeser {
 	
 	private void getStudentInfo(Student student) {
 		
+		double snitt = 0;
 		System.out.printf("%-50s %s%n", "Emne", "Karakter");
 		resultatene.stream()
 					.filter(r -> r.getStudenten().equals(student))
 					.forEach(r -> System.out.printf("%-50s %4c%n", r.getEmnet().toString(), r.getKarakter()));
+		snitt = resultatene.stream()
+				.filter(r -> r.getStudenten().equals(student))
+				.mapToDouble(r -> r.getKarakter())
+				.average()
+				.getAsDouble();
+		if (snitt != 0 ) {
+			snitt = Math.round(snitt);
+			System.out.printf("%nSnitt: %c%n", (char) snitt);
+		}
 	}
 	
 	private void getEmneInfo(Emne emnet) {
 		
+		double snitt = 0;
 		System.out.printf("%-50s %s%n", "Student", "Karakter");
 		resultatene.stream()
 					.filter(r -> r.getEmnet().equals(emnet))
 					.forEach(r -> System.out.printf("%-50s %4c%n", r.getStudenten().getNavnestreng(), r.getKarakter()));
+		snitt = resultatene.stream()
+					.filter(r -> r.getEmnet().equals(emnet))
+					.mapToDouble(r -> r.getKarakter())
+					.average()
+					.getAsDouble();
+		if (snitt != 0 ) {
+			snitt = Math.round(snitt);
+			System.out.printf("%nSnitt: %c%n", (char) snitt);
+		}
+		
 	}
 	
 	public void skrivUtStudenterSortertPaaNavn() {
@@ -127,7 +148,7 @@ public class ResultatLeser {
 	}
 	
 	public void printInputMenu() {
-		System.out.printf("%n%s%n%s%n%s%n%s", 
+		System.out.printf("%n%s%n%s%n%s%n%n%s", 
 				"1 - Skriv ut alle studenter",
 				"2 - Skriv ut info om student",
 				"3 - Finn emne",

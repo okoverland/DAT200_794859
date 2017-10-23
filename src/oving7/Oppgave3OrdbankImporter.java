@@ -118,7 +118,7 @@ public class Oppgave3OrdbankImporter {
 	
 	public static void main(String[] args) {
 		
-		//importTextFile(); Kjøres kun ved ny liste
+		//importTextFile(); //Kjøres kun ved ny liste
 		
 		MittHashMap<String, String> listen = getDictionary();
 

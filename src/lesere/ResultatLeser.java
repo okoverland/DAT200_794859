@@ -113,7 +113,7 @@ public class ResultatLeser {
 		}
 		
 	}
-	
+	// skriv om til treemap og søk på deler
 	public void skrivUtStudenterSortertPaaNavn() {
 		
 		studentene.stream()

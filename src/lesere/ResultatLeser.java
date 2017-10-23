@@ -55,22 +55,29 @@ public class ResultatLeser {
 		
 	}
 	
-	// Finner student på O(log n) tid. Hvis ikke komplett navn, finner første match.
+	// Finner student på O(log n) tid. Hvis ikke komplett navn, finner første match O(n).
 	private Student finnStudentNavn(String navn) {
 		
 		if (studentMapByName == null) studentMapByName = mapStudentsByName();		
+		if (navn.equals("") || navn == null) return null;
 		
-		Student theStudent = studentMapByName.get(navn);
+		Student theStudent = null;
+		
+		theStudent = studentMapByName.get(navn);
 		
 		if (theStudent == null) {
-			//IKKE FERDIG!!!
+			String theKey = studentMapByName.keySet().stream()
+					.filter(k -> k.contains(navn))
+					.findFirst()
+					.orElse(null);
+			if (theKey != null) theStudent = studentMapByName.get(theKey);
 		}
 		
 		return theStudent;
 		
 	}
 	
-	public void preloadHashMaps() {
+	public void preloadMaps() {
 		if (studentMapByID == null) studentMapByID = mapStudentsByID();
 		if (emneMap == null) emneMap = mapEmner();
 		if (studentMapByName == null) studentMapByName = mapStudentsByName();

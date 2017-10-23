@@ -4,29 +4,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import personer.Person;
 
 public class ObjectTest {
 	
 	public static void main(String[] args) {
 		
-		List<String> strings = new ArrayList<>();
-		Map<Integer, String> maps = new HashMap<>();
+		List<Person> persons = new ArrayList<>();
+		Map<Integer, Person> maps = new HashMap<>();
 		
-		strings.add("test1");
-		strings.add("test2");
-		strings.add("test3");
+		persons.add(new Person(11, "Ola", "Nordmann", 23));
+		persons.add(new Person(22, "Per", "Svenske", 54));
+		persons.add(new Person(33, "Åge", "Hansen", 26));
 		
-		for (int i = 0; i < strings.size(); i++) {
-			maps.put((int)(i*Math.exp(2)), strings.get(i));
+		for (int i = 0; i < persons.size(); i++) {
+			maps.put(persons.get(i).getID(), persons.get(i));
 		}
 		
-		strings.stream().forEach(System.out::println);
+		persons.stream().forEach(System.out::println);
 		System.out.println();		
-		System.out.println(maps.get(0));
-		String theString = strings.get(0);
-		theString = "test100";
+		System.out.println(maps.get(11));
+		
+		Person thePerson = persons.get(0);
+		thePerson.setEtternavn("Norske");
+		
 		System.out.println();		
-		System.out.println(maps.get(0));
+		System.out.println(maps.get(11));
 		
 		
 		

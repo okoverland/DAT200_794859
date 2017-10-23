@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.TreeMap;
+
 import emner.Eksamensresultat;
 import emner.Emne;
 import personer.Student;
@@ -19,7 +22,7 @@ public class ResultatLeser {
 	private List<Emne> emnene;
 	private List<Eksamensresultat> resultatene;
 	private Map<Integer, Student> studentMapByID;
-	private Map<Integer, Student> studentMapByFullName;
+	private Map<String, Student> studentMapByName;
 	private Map<Integer, Emne> emneMap;
 	
 	public ResultatLeser() {
@@ -27,7 +30,7 @@ public class ResultatLeser {
 		emnene = new EmneLeser().lesEmnerFraFil();
 		resultatene = lesResultaterFraFil();
 		studentMapByID = null;
-		studentMapByFullName = null;
+		studentMapByName = null;
 		emneMap = null;
 
 	}
@@ -52,17 +55,25 @@ public class ResultatLeser {
 		
 	}
 	
+	// Finner student på O(log n) tid. Hvis ikke komplett navn, finner første match.
 	private Student finnStudentNavn(String navn) {
 		
-		if (studentMapByID == null) studentMapByFullName = mapStudentsByName();		
-		return studentMapByFullName.get(navn.hashCode());
+		if (studentMapByName == null) studentMapByName = mapStudentsByName();		
+		
+		Student theStudent = studentMapByName.get(navn);
+		
+		if (theStudent == null) {
+			//IKKE FERDIG!!!
+		}
+		
+		return theStudent;
 		
 	}
 	
 	public void preloadHashMaps() {
 		if (studentMapByID == null) studentMapByID = mapStudentsByID();
 		if (emneMap == null) emneMap = mapEmner();
-		if (studentMapByID == null) studentMapByFullName = mapStudentsByName();
+		if (studentMapByName == null) studentMapByName = mapStudentsByName();
 	}
 	
 	private HashMap<Integer, Student> mapStudentsByID() {
@@ -73,8 +84,8 @@ public class ResultatLeser {
 		return emnene.stream().collect(HashMap::new, (map, emne) -> map.put(emne.getEmnekode().hashCode(), emne), HashMap::putAll);
 	}
 	
-	private HashMap<Integer, Student> mapStudentsByName() {
-		return studentene.stream().collect(HashMap::new, (map,student) -> map.put(student.getNavnestreng().hashCode(), student), HashMap::putAll);
+	private TreeMap<String, Student> mapStudentsByName() {
+		return studentene.stream().collect(TreeMap::new, (map,student) -> map.put(student.getNavnestreng(), student), TreeMap::putAll);
 	}
 	
 	private void getStudentInfo(Student student) {
@@ -113,12 +124,12 @@ public class ResultatLeser {
 		}
 		
 	}
-	// skriv om til treemap og søk på deler
+	// skriv om til treemap og søk på deler: ok, skriver ut på O(n) tid.
 	public void skrivUtStudenterSortertPaaNavn() {
+		if (studentMapByName == null) studentMapByName = mapStudentsByName();
 		
-		studentene.stream()
-					.sorted( (s1, s2) -> s1.getNavnestreng().compareTo(s2.getNavnestreng()))
-					.forEach( s -> System.out.println(s.getNavnestreng()) );
+		studentMapByName.entrySet().stream().forEach(entry -> System.out.println(entry.getKey()));
+				
 	}
 	
 	public void getEmne(String emnekode) {
